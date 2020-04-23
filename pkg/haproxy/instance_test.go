@@ -2374,7 +2374,7 @@ frontend _front_http
 		h = c.config.Hosts().AcquireHost("d1.local")
 		h.AddPath(b, "/")
 
-		acme := c.config.Acme()
+		acme := &c.config.Global().Acme
 		acme.Enabled = true
 		acme.Prefix = "/.acme"
 		acme.Socket = "/run/acme.sock"
@@ -2844,7 +2844,7 @@ func setup(t *testing.T) *testConfig {
 		mapsDir:      tempdir,
 	})
 	instance.curConfig = config
-	config.ConfigDefaultX509Cert("/var/haproxy/ssl/certs/default.pem")
+	config.frontend.DefaultCert = "/var/haproxy/ssl/certs/default.pem"
 	c := &testConfig{
 		t:          t,
 		logger:     logger,
@@ -2869,7 +2869,7 @@ func (c *testConfig) newConfig() Config {
 		mapsTemplate: c.instance.(*instance).mapsTemplate,
 		mapsDir:      c.tempdir,
 	})
-	config.ConfigDefaultX509Cert("/var/haproxy/ssl/certs/default.pem")
+	config.frontend.DefaultCert = "/var/haproxy/ssl/certs/default.pem"
 	c.configGlobal(config.Global())
 	return config
 }
